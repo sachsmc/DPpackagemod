@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "library(ggplot2)\nlibrary(DPpackage)\n\nx1 <- c(rnorm(15, sd = 2), 2 + rt(15, df = 5))\ny <- 2 + cos(2 * x1 * pi / 5) + .25 * x1 + .25 * rt(length(x1), df = 15)\n\nn <- 200\nX <- rnorm(n, mean = 0)\nx1 <- rnorm(n, mean = X, sd = 0.5) ## observed\n\ny <- 1 + 2.5 * X + rnorm(n)\n\nchidat <- data.frame(x1 = x1, y = y)\n#ggplot(chidat, aes(x = x1, y = y)) + geom_point() + stat_smooth()\n\nw <- cbind(y, x1)#, x2, x3)\nwbar <- apply(w, 2, mean) \nwcov <- var(w) \nprior <- list(a0 = 10, \n              b0 = 1, \n              nu1 = 4, \n              nu2 = 4, \n              s2 = 0.5 * wcov, \n              m2 = wbar, \n              psiinv2 = 2 * solve(wcov),\n              tau1 = 6.01, tau2 = 3.01)\n\nmcmc <- list(nburn=5000,\n             nsave=1000,\n             nskip=2,\n             ndisplay=500)\n\n################################################\n# covariate values where the density\n# and mean function is evaluated\n################################################\nxpred <- seq(-2, 2, .1)\t\n################################################\n# fiiting the model\n################################################\n\nfitLDDP <- DPcdensity(y = y, x = x1, xpred = xpred,\n                       ngrid=1, \n                       compute.band=TRUE,\n                       type.band=\"HPD\",\n                       prior=prior, \n                       mcmc=mcmc, \n                       state=NULL, \n                       status=TRUE)\n\nplot(y ~ X)\nlines(y ~ x1, type = \"p\", pch = 20)\nlines(xpred, fitLDDP$meanfp.m, type = \"l\", lwd = 2, col = \"red\")\nlines(xpred, fitLDDP$meanfp.l, type = \"l\", lwd = 1, lty = 2, col = \"red\")\nlines(xpred, fitLDDP$meanfp.h, type = \"l\", lwd = 1, lty = 2, col = \"red\")\n\n\n\nlibrary(rjags)\n\n\n## full measurement error model\nmodel_string <- \"model{\n\n# Likelihood\nfor(i in 1:n){\nY[i]   ~ dnorm(mu[i],inv.var)\nmu[i] <- beta[1] + beta[2]*X[i]\nX[i] ~ dnorm(jqe * X2[i], xvar)\n#X2[i] ~ dnorm(mux, varx)\n}\n\njqe <- .5\nxvar <- pow(.5, -1)\n\n# Prior for beta\nfor(j in 1:2){\nbeta[j] ~ dnorm(0,0.0001)\n}\n\n# Prior for the inverse variance\ninv.var   ~ dgamma(0.01, 0.01)\nmux ~ dnorm(0.0, 0.001)\nvarx ~ dgamma(0.01, 0.01)\n# inv.det   ~ dgamma(0.01, 0.01)\nsigma     <- 1/sqrt(inv.var)\n\n}\"\n\n\n## full measurement error model\nmodel_string_old <- \"model{\n\n# Likelihood\nfor(i in 1:n){\nX2[i] ~ dnorm(X[i], 1.0)\nY[i]   ~ dnorm(mu[i],inv.var)\nmu[i] <- beta[1] + beta[2]*X[i]\nX[i] ~ dnorm(mux, varx)\n\n}\n\n# Prior for beta\nfor(j in 1:2){\nbeta[j] ~ dnorm(0,0.0001)\n}\n\n# Prior for the inverse variance\ninv.var   ~ dgamma(0.01, 0.01)\nmux ~ dnorm(0.0, 0.001)\nvarx ~ dgamma(0.01, 0.01)\n#inv.det   ~ dgamma(0.01, 0.01)\nsigma     <- 1/sqrt(inv.var)\n\n}\"\n\n\nmodel <- jags.model(textConnection(model_string_old), \n                    data = list(Y = y, n = length(y), X2 = x1), quiet = TRUE)\n\n\nupdate(model, 1000, progress.bar = \"none\")\n\nsamp0 <- coda.samples(\n  model,\n  variable.names = c(\"beta\", \"X\"),\n  n.iter = 50000, thin = 10,\n  progress.bar = \"none\"\n)\n\nres.full <- colMeans(samp0[[1]])\n\nabline(res.full[-c(1:n)][1], res.full[-c(1:n)][2], col = \"blue\")\n\nhsy <- lm(y ~ x1)\nabline(hsy$coefficients[1], hsy$coefficients[2], col = \"green\")\n\nabline(1, 2.5, lwd = 2, col = \"purple\")\n\nplot(X ~ res.full[1:n])\nabline(0, 1)\n",
+    "created" : 1491565714994.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3729391610",
+    "id" : "5D66D60",
+    "lastKnownWriteTime" : 1493110894,
+    "last_content_update" : 1493110961853,
+    "path" : "G:/STAFF/Michael Sachs/Stats Projects/Bayesian NP Meta Analysis/Code/dpp-regression-poc.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

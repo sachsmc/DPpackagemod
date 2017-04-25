@@ -1,0 +1,412 @@
+useDynLib(DPpackage)
+
+import(MASS)
+import(nlme)
+import(splines)
+import(survival)
+
+export( 
+        BDPdensity,
+        BDPdensity.default,
+        CSDPbinary,
+        CSDPbinary.default,
+        DPbetabinom,
+        DPbetabinom.default,        
+        DPbinary,
+        DPbinary.default,
+        DPcaterpillar,
+        DPcdensity,
+        DPcdensity.default,        
+        DPdensity,
+        DPdensity.default,        
+        DPelicit,
+        DPelicit.default,        
+        DPglmm,
+        DPglmm.default,
+        DPlmm,
+        DPlmm.default,
+        DPmeta,
+        DPmeta.default,
+        DPmultmeta,
+        DPmultmeta.default,
+        DPMdencens,
+        DPMdencens.default,
+        DPMglmm,
+        DPMglmm.default,
+        DPMlmm,
+        DPMlmm.default,
+        DPMmeta,
+        DPMmeta.default,
+        DPMrandom,
+        DPMrandom.default,
+        DPMolmm,
+        DPMolmm.default,
+        DPMrasch,
+        DPMrasch.default,
+        DPMraschpoisson,
+        DPMraschpoisson.default,
+        DPolmm,
+        DPolmm.default,
+        DPpsBF,        
+        DPrandom,
+        DPrandom.default,
+        DPrasch,
+        DPrasch.default,
+        DPraschpoisson,
+        DPraschpoisson.default,
+        DProc,
+        DProc.default,
+        DPsurvint,
+        DPsurvint.default,
+        FPTbinary,
+        FPTbinary.default,
+        FPTrasch,
+        FPTrasch.default,
+        FPTraschpoisson,
+        FPTraschpoisson.default,
+        HDPMdensity,
+        HDPMdensity.default,
+        HDPMcdensity,
+        HDPMcdensity.default,
+        LDBDPdensity,
+        LDBDPdensity.default,
+        LDDPdensity,
+        LDDPdensity.default,
+        LDDPsurvival,
+        LDDPsurvival.default,
+        LDDPrasch,
+        LDDPrasch.default,
+        LDDPraschpoisson,
+        LDDPraschpoisson.default,
+        LDDProc,
+        LDDProc.default,
+        LDDPtwopl,
+        LDDPtwopl.default,
+        LDTFPdensity,
+        LDTFPdensity.default,
+        LDTFPglmm,
+        LDTFPglmm.default,
+        LDTFPsurvival,
+        LDTFPsurvival.default,
+        LDPDdoublyint,
+        LDPDdoublyint.default,
+        Pbinary,
+        Pbinary.default,
+        Plm,
+        Plm.default,
+        ps,
+        PSgam,
+        PSgam.default,
+        PTdensity,
+        PTdensity.default,
+        PTlm,
+        PTlm.default,
+        PTmeta,
+        PTmeta.default,
+        PTglmm,
+        PTglmm.default,
+        PTlmm,
+        PTlmm.default,
+        PTolmm,
+        PTolmm.default,
+        PTrandom,
+        PTrandom.default,
+        PTsampler,
+        PTsampler.default,
+        TDPdensity,
+        TDPdensity.default
+)
+
+
+importFrom(graphics, plot)
+
+## register S3 methods
+
+S3method(print, anovaPsCP)
+
+S3method(print, BDPdensity)
+S3method(plot, BDPdensity)
+S3method(summary, BDPdensity)
+S3method(print, summaryBDPdensity)
+
+S3method(print, CSDPbinary)
+S3method(plot, CSDPbinary)
+S3method(summary, CSDPbinary)
+S3method(print, summaryCSDPbinary)
+S3method(predict, CSDPbinary)
+S3method(anova, CSDPbinary)
+
+S3method(print, DPbetabinom)
+S3method(plot, DPbetabinom)
+S3method(summary, DPbetabinom)
+S3method(print, summaryDPbetabinom)
+
+S3method(print, DPbinary)
+S3method(plot, DPbinary)
+S3method(summary, DPbinary)
+S3method(print, summaryDPbinary)
+S3method(predict, DPbinary)
+S3method(anova, DPbinary)
+
+S3method(print, DPdensity)
+S3method(plot, DPdensity)
+S3method(summary, DPdensity)
+S3method(print, summaryDPdensity)
+
+S3method(print, DPcdensity)
+S3method(plot, DPcdensity)
+S3method(summary, DPcdensity)
+S3method(print, summaryDPcdensity)
+
+S3method(print, DPelicit)
+
+S3method(print, DPglmm)
+S3method(plot, DPglmm)
+S3method(summary, DPglmm)
+S3method(print, summaryDPglmm)
+S3method(anova, DPglmm)
+
+S3method(print, DPlmm)
+S3method(plot, DPlmm)
+S3method(summary, DPlmm)
+S3method(print, summaryDPlmm)
+S3method(anova, DPlmm)
+
+S3method(print, DPMdencens)
+S3method(plot, DPMdencens)
+S3method(summary, DPMdencens)
+S3method(print, summaryDPMdencens)
+
+S3method(print, DPmeta)
+S3method(plot, DPmeta)
+S3method(summary, DPmeta)
+S3method(print, summaryDPmeta)
+S3method(anova, DPmeta)
+
+S3method(print, DPmultmeta)
+S3method(plot, DPmultmeta)
+S3method(summary, DPmultmeta)
+S3method(print, summaryDPmultmeta)
+
+S3method(print, DPMglmm)
+S3method(plot, DPMglmm)
+S3method(summary, DPMglmm)
+S3method(print, summaryDPMglmm)
+S3method(anova, DPMglmm)
+
+S3method(print, DPMlmm)
+S3method(plot, DPMlmm)
+S3method(summary, DPMlmm)
+S3method(print, summaryDPMlmm)
+S3method(anova, DPMlmm)
+
+S3method(print, DPMmeta)
+S3method(plot, DPMmeta)
+S3method(summary, DPMmeta)
+S3method(print, summaryDPMmeta)
+S3method(anova, DPMmeta)
+
+S3method(print, DPMrandom)
+S3method(plot, DPMrandom)
+
+S3method(print, DPMolmm)
+S3method(plot, DPMolmm)
+S3method(summary, DPMolmm)
+S3method(print, summaryDPMolmm)
+S3method(anova, DPMolmm)
+
+S3method(print, DPMrasch)
+S3method(plot, DPMrasch)
+S3method(summary, DPMrasch)
+S3method(print, summaryDPMrasch)
+
+S3method(print, DPMraschpoisson)
+S3method(plot, DPMraschpoisson)
+S3method(summary, DPMraschpoisson)
+S3method(print, summaryDPMraschpoisson)
+
+#S3method(print, DPMsurvival)
+#S3method(plot, DPMsurvival)
+#S3method(summary, DPMsurvival)
+#S3method(print, summaryDPMsurvival)
+
+S3method(print, DPolmm)
+S3method(plot, DPolmm)
+S3method(summary, DPolmm)
+S3method(print, summaryDPolmm)
+S3method(anova, DPolmm)
+
+S3method(print, DPpsBF)
+
+S3method(print, DPrandom)
+S3method(plot, DPrandom)
+
+S3method(print, DPrasch)
+S3method(plot, DPrasch)
+S3method(summary, DPrasch)
+S3method(print, summaryDPrasch)
+
+S3method(print, DPraschpoisson)
+S3method(plot, DPraschpoisson)
+S3method(summary, DPraschpoisson)
+S3method(print, summaryDPraschpoisson)
+
+S3method(print, DProc)
+S3method(plot, DProc)
+
+S3method(print, DPsurvint)
+S3method(plot, DPsurvint)
+S3method(summary, DPsurvint)
+S3method(print, summaryDPsurvint)
+S3method(predict, DPsurvint)
+S3method(plot, predict.DPsurvint)
+S3method(anova, DPsurvint)
+
+S3method(print, FPTbinary)
+S3method(plot, FPTbinary)
+S3method(summary, FPTbinary)
+S3method(print, summaryFPTbinary)
+S3method(predict, FPTbinary)
+S3method(anova, FPTbinary)
+
+S3method(print, FPTrasch)
+S3method(plot, FPTrasch)
+S3method(summary, FPTrasch)
+S3method(print, summaryFPTrasch)
+
+S3method(print, FPTraschpoisson)
+S3method(plot, FPTraschpoisson)
+S3method(summary, FPTraschpoisson)
+S3method(print, summaryFPTraschpoisson)
+
+S3method(print, HDPMdensity)
+S3method(plot,  HDPMdensity)
+S3method(summary, HDPMdensity)
+S3method(print, summaryHDPMdensity)
+S3method(predict, HDPMdensity)
+
+S3method(print, HDPMcdensity)
+S3method(plot,  HDPMcdensity)
+S3method(summary, HDPMcdensity)
+S3method(print, summaryHDPMcdensity)
+S3method(predict, HDPMcdensity)
+
+S3method(print, LDBDPdensity)
+S3method(plot, LDBDPdensity)
+S3method(summary, LDBDPdensity)
+S3method(print, summaryLDBDPdensity)
+
+S3method(print, LDDPdensity)
+S3method(plot, LDDPdensity)
+S3method(summary, LDDPdensity)
+S3method(print, summaryLDDPdensity)
+
+S3method(print, LDDPsurvival)
+S3method(plot, LDDPsurvival)
+S3method(summary, LDDPsurvival)
+S3method(print, summaryLDDPsurvival)
+
+S3method(print, LDDPrasch)
+S3method(plot, LDDPrasch)
+S3method(summary, LDDPrasch)
+S3method(print, summaryLDDPrasch)
+
+S3method(print, LDDPtwopl)
+S3method(plot, LDDPtwopl)
+S3method(summary, LDDPtwopl)
+S3method(print, summaryLDDPtwopl)
+
+S3method(print, LDDProc)
+S3method(plot, LDDProc)
+S3method(summary, LDDProc)
+S3method(print, summaryLDDProc)
+
+S3method(print, Pbinary)
+S3method(plot, Pbinary)
+S3method(summary, Pbinary)
+S3method(print, summaryPbinary)
+S3method(predict, Pbinary)
+S3method(anova, Pbinary)
+
+S3method(print, Plm)
+S3method(plot, Plm)
+S3method(summary, Plm)
+S3method(print, summaryPlm)
+S3method(anova, Plm)
+
+S3method(print, PSgam)
+S3method(plot, PSgam)
+S3method(summary, PSgam)
+S3method(print, summaryPSgam)
+S3method(anova, PSgam)
+
+S3method(print, PTdensity)
+S3method(plot, PTdensity)
+S3method(summary, PTdensity)
+S3method(print, summaryPTdensity)
+
+S3method(print, PTlm)
+S3method(plot, PTlm)
+S3method(summary, PTlm)
+S3method(print, summaryPTlm)
+S3method(anova, PTlm)
+
+S3method(print, PTmeta)
+S3method(plot, PTmeta)
+S3method(summary, PTmeta)
+S3method(print, summaryPTmeta)
+S3method(anova, PTmeta)
+
+S3method(print, PTglmm)
+S3method(plot, PTglmm)
+S3method(summary, PTglmm)
+S3method(print, summaryPTglmm)
+S3method(anova, PTglmm)
+
+S3method(print, PTlmm)
+S3method(plot, PTlmm)
+S3method(summary, PTlmm)
+S3method(print, summaryPTlmm)
+S3method(anova, PTlmm)
+
+S3method(print, PTolmm)
+S3method(plot, PTolmm)
+S3method(summary, PTolmm)
+S3method(print, summaryPTolmm)
+S3method(anova, PTolmm)
+
+S3method(print, PTrandom)
+S3method(plot, PTrandom)
+
+S3method(print, PTsampler)
+S3method(plot, PTsampler)
+S3method(summary, PTsampler)
+S3method(print, summaryPTsampler)
+
+S3method(print, TDPdensity)
+S3method(plot, TDPdensity)
+S3method(summary, TDPdensity)
+S3method(print, summaryTDPdensity)
+
+S3method(print, LDPDdoublyint)
+S3method(plot, LDPDdoublyint)
+S3method(summary, LDPDdoublyint)
+S3method(print, summaryLDPDdoublyint)
+S3method(predict, LDPDdoublyint)
+S3method(print, predict.LDPDdoublyint)
+S3method(plot, predict.LDPDdoublyint)
+
+S3method(print, LDTFPdensity)
+S3method(plot, LDTFPdensity)
+S3method(summary, LDTFPdensity)
+S3method(print, summaryLDTFPdensity)
+
+S3method(print, LDTFPsurvival)
+S3method(plot, LDTFPsurvival)
+S3method(summary, LDTFPsurvival)
+S3method(print, summaryLDTFPsurvival)
+
+S3method(print, LDTFPglmm)
+S3method(plot, LDTFPglmm)
+S3method(summary, LDTFPglmm)
+S3method(print, summaryLDTFPglmm)
