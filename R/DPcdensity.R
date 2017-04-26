@@ -35,12 +35,13 @@
 
 
 "DPcdensity"<-
-function(y,x,xpred,ngrid=100,grid=NULL,compute.band=FALSE,type.band="PD",prior,mcmc,state,status,data=sys.frame(sys.parent()),work.dir=NULL,measerr=1)
+function(y,x,mus,sds,xpred,ngrid=100,grid=NULL,compute.band=FALSE,type.band="PD",prior,mcmc,state,status,data=sys.frame(sys.parent()),work.dir=NULL,measerr=1)
 UseMethod("DPcdensity")
 
 DPcdensity.default<-
 function(y,
          x,
+         mus,sds,
          xpred,
          ngrid=100,
 		 grid=NULL,
@@ -70,6 +71,7 @@ function(y,
          nx <- dim(x)[2]
          z <- cbind(y,x)
          nvar <- nx + 1  
+         basemus <- cbind(mus, sds)
 
        #########################################################################################
        # identify missing values to be imputed
@@ -219,7 +221,7 @@ function(y,
        #########################################################################################
        # mcmc specification
        #########################################################################################
-         mcmcvec <- c(mcmc$nburn,mcmc$nskip,mcmc$ndisplay,cband,tband)
+         mcmcvec <- c(mcmc$nburn,mcmc$nskip,mcmc$ndisplay,cband,tband,mcmc$nsave)
          nsave <- mcmc$nsave
 
        #########################################################################################
@@ -344,7 +346,7 @@ function(y,
 				psiinv2    =as.double(psiinv2),
 				tau        =as.double(tau),
 				mcmc       =as.integer(mcmcvec),
-				nsave      =as.integer(nsave),
+			#	nsave      =as.integer(nsave),
 				cpo        =as.double(cpo),
 				thetasave  =as.double(thetasave),
 				denspm     =as.double(denspm),
@@ -390,6 +392,7 @@ function(y,
 				worksam    =as.double(worksam),
 				numcpo     =as.double(numcpo),
 				denomcpo   =as.double(denomcpo),
+			  basemus    =as.double(basemus),
 				PACKAGE    ="DPpackage")
 
        #########################################################################################

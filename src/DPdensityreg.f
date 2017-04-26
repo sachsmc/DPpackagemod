@@ -3,7 +3,7 @@ c=======================================================================
      &                     xpred,ngrid,grid,  
      &                     a0b0,k0,nuvec,s2inv, 
      &                     s2invm2, 
-     &                     psiinv2,tau,mcmc,nsave,
+     &                     psiinv2,tau,mcmc,
      &                     cpo,thetasave,denspm,denspl,densph, 
      &                     meanfpm,meanfpl,meanfph, 
      &                     alpha,m1,muclus,ncluster,
@@ -13,7 +13,7 @@ c=======================================================================
      &                     workm1,workm2,workm3,workmh1,workmh2,workv1,
      &                     workv2,workv3,ywork,
      &                     iflagx,workvx,workmx,worksam,
-     &                     numcpo,denomcpo)
+     &                     numcpo,denomcpo,basemus)
 c=======================================================================                      
 c     # of arguments = 64.
 c
@@ -281,6 +281,7 @@ c+++++Data
       integer nrec,nx,nvar,nmissi,nmiss
       integer missp(nmiss,2)  
       real*8 z(nrec,nvar)
+      real*8 basemus(nrec,nvar*2)
       real*8 zsave(nrec,nvar)
 
 c+++++Prediction
@@ -296,11 +297,11 @@ c+++++Prior
       real*8 s2inv(nvar,nvar),s2invm2(nvar)
 
 c+++++MCMC parameters
-      integer mcmc(5),nburn,nskip,nsave,ndisplay
+      integer mcmc(6),nburn,nskip,nsave,ndisplay
 
 c+++++Output
       real*8 cpo(nrec,2)
-      real*8 thetasave(nsave,nvar+nvar*(nvar+1)/2+3)
+      real*8 thetasave(mcmc(6),nvar+nvar*(nvar+1)/2+3)
       real*8 denspm(npred,ngrid)
       real*8 denspl(npred,ngrid)
       real*8 densph(npred,ngrid)
@@ -341,7 +342,7 @@ c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       real*8 fs(ngrid) 
       real*8 fm(npred) 
 
-      real*8 worksam(nsave) 
+      real*8 worksam(mcmc(6)) 
 
       real*8 numcpo(nrec),denomcpo(nrec)
 
@@ -388,6 +389,7 @@ c++++ Define parameters
       ndisplay=mcmc(3)
       cband=mcmc(4)
       tband=mcmc(5)
+      nsave=mcmc(6)
 
       nuniqs=nvar*(nvar+1)/2
       nu1=nuvec(1)
@@ -485,9 +487,9 @@ c+++++++ Sampling for the measurement error distribution
 c+++++++++++++++++++++++++++++++++++++++++
         
          do ii=1,nrec
-             do jj=2,nvar
-               tmpm=z(ii,jj)*0.8
-               tmpsd=0.2
+             do jj=1,nvar
+               tmpm=basemus(ii,jj)
+               tmpsd=basemus(ii,jj+nvar)
                z(ii,jj)=rnorm(tmpm,tmpsd) 
              end do
          end do
