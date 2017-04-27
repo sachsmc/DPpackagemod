@@ -6,7 +6,7 @@ library(splines)
 n <- 50
 
 X <- rnorm(n, sd = 3)
-Y <-  2 + cos(2 * X * pi / 5) + .25 * X + .25 * rt(length(x1), df = 15)
+Y <-  2 + cos(2 * X * pi / 5) + .25 * X + .25 * rt(length(X), df = 15)
 enns <- sample(ceiling(runif(n, 100, 500)))
 
 samp.indi.data <- function(i) {
