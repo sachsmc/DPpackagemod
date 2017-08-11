@@ -1,4 +1,4 @@
-useDynLib(DPpackage)
+useDynLib(DPpackagemod)
 
 import(MASS)
 import(nlme)
