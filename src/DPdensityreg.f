@@ -1194,14 +1194,14 @@ c               call dblepr("LPML",-1,tmp2,1)
 
 c+++++++++++++ print
                skipcount = 0
-               if(dispcount.ge.ndisplay)then
-                  call cpu_time(sec1)
-                  sec00=sec00+(sec1-sec0)
-                  sec=sec00
-                  sec0=sec1
-                  tmp1=sprint(isave,nsave,sec)
-                  dispcount=0
-               end if   
+c               if(dispcount.ge.ndisplay)then
+c                  call cpu_time(sec1)
+c                  sec00=sec00+(sec1-sec0)
+c                  sec=sec00
+c                  sec0=sec1
+c                  tmp1=sprint(isave,nsave,sec)
+c                  dispcount=0
+c               end if   
             end if
          end if   
       end do 

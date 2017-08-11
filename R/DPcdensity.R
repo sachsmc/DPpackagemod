@@ -393,7 +393,7 @@ function(y,
 				numcpo     =as.double(numcpo),
 				denomcpo   =as.double(denomcpo),
 			  basemus    =as.double(basemus),
-				PACKAGE    ="DPpackage")
+				PACKAGE    ="DPpackagemod")
 
        #########################################################################################
        # save state
